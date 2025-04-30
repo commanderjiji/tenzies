@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
+import { useWindowSize } from "react-use";
+import Confetti from "react-confetti";
+// import ConfettiExplosion from "react-confetti-explosion";
 
 // Components
 import Die from "./Die";
 
 export default function App() {
-	const [diceNumber, setDiceNumber] = useState(generateAllNewDice());
+	const [diceNumber, setDiceNumber] = useState(() => generateAllNewDice());
+
+	const gameWon = diceNumber.every((die) => die.isHeld) && diceNumber.every((die) => die.value === diceNumber[0].value);
+
+	const { width, height } = useWindowSize();
 
 	function generateAllNewDice() {
 		// My solution
@@ -25,18 +32,12 @@ export default function App() {
 		}));
 	}
 
-	/**
-	 * Challenge: Update the `rollDice` function to not just roll
-	 * all new dice, but instead to look through the existing dice
-	 * to NOT role any that are being `held`.
-	 *
-	 * Hint: this will look relatively similiar to the `hold`
-	 * function below. When we're "rolling" a die, we're really
-	 * just updating the `value` property of the die object.
-	 */
-
 	function rollDice() {
-		setDiceNumber((prevDice) => prevDice.map((die) => (die.isHeld ? die : { ...die, value: Math.ceil(Math.random() * 6) })));
+		if (!gameWon) {
+			setDiceNumber((prevDice) => prevDice.map((die) => (die.isHeld ? die : { ...die, value: Math.ceil(Math.random() * 6) })));
+		} else {
+			setDiceNumber(generateAllNewDice());
+		}
 	}
 
 	function holdDice(id) {
@@ -47,11 +48,14 @@ export default function App() {
 
 	return (
 		<main>
-			<h1 className="title">Tenzies</h1>
+			{gameWon && <Confetti />}
+			<h1 className="title">Tenzies Roll</h1>
 			<p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
+
 			<div className="dice-container">{diceElements}</div>
+
 			<button className="roll-dice" onClick={rollDice}>
-				Roll
+				{gameWon ? "New Game" : "Roll"}
 			</button>
 		</main>
 	);
