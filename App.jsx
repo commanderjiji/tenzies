@@ -10,7 +10,15 @@ import Die from "./Die";
 export default function App() {
 	const [diceNumber, setDiceNumber] = useState(() => generateAllNewDice());
 
+	const newGameRef = React.useRef(null);
+
 	const gameWon = diceNumber.every((die) => die.isHeld) && diceNumber.every((die) => die.value === diceNumber[0].value);
+
+	React.useEffect(() => {
+		if (gameWon) {
+			newGameRef.current.focus();
+		}
+	}, [gameWon]);
 
 	const { width, height } = useWindowSize();
 
@@ -49,12 +57,15 @@ export default function App() {
 	return (
 		<main>
 			{gameWon && <Confetti />}
+			<div aria-live="polite" className="sr-only">
+				{gameWon && <p>Congratulations! You won! Press "New Game" to start again.</p>}
+			</div>
 			<h1 className="title">Tenzies Roll</h1>
 			<p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
 
 			<div className="dice-container">{diceElements}</div>
 
-			<button className="roll-dice" onClick={rollDice}>
+			<button ref={newGameRef} className="roll-dice" onClick={rollDice}>
 				{gameWon ? "New Game" : "Roll"}
 			</button>
 		</main>
