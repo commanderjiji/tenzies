@@ -41,6 +41,7 @@ main {
 	font-weight: 400;
 	margin-top: 0;
 	text-align: center;
+	font-size: 0.8rem;
 }
 
 .dice-container {
@@ -94,4 +95,19 @@ button {
 	cursor: pointer;
 	width: 90%;
 	height: 100%;
+}
+
+.highscore {
+	margin: 0;
+}
+
+.clicks {
+	margin: 0;
+}
+
+.title,
+.instructions,
+.roll-dice,
+.dice-container {
+	margin: 8px 0;
 }
