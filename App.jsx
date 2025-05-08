@@ -8,7 +8,11 @@ import Confetti from "react-confetti";
 import Die from "./Die";
 
 export default function App() {
-	const [diceNumber, setDiceNumber] = useState(() => generateAllNewDice());
+	const [diceNumber, setDiceNumber] = useState(() => generateAllNewDice()); //() => generateAllNewDice()
+
+	const [count, setCount] = useState(0);
+
+	const [highscore, setHighscore] = useState(0);
 
 	const newGameRef = React.useRef(null);
 
@@ -43,13 +47,18 @@ export default function App() {
 	function rollDice() {
 		if (!gameWon) {
 			setDiceNumber((prevDice) => prevDice.map((die) => (die.isHeld ? die : { ...die, value: Math.ceil(Math.random() * 6) })));
+			setCount((prevCount) => prevCount + 1);
 		} else {
 			setDiceNumber(generateAllNewDice());
+			setHighscore((prevHighscore) => (prevHighscore === 0 ? count : Math.min(prevHighscore, count)));
+			setCount(0);
 		}
 	}
 
 	function holdDice(id) {
 		setDiceNumber((prevDice) => prevDice.map((die) => (die.id === id ? { ...die, isHeld: !die.isHeld } : die)));
+
+		setCount((prevCount) => prevCount + 1);
 	}
 
 	const diceElements = diceNumber.map((dieObj) => <Die holdDice={holdDice} id={dieObj.id} key={dieObj.id} value={dieObj.value} isHeld={dieObj.isHeld} />);
@@ -62,6 +71,9 @@ export default function App() {
 			</div>
 			<h1 className="title">Tenzies Roll</h1>
 			<p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
+
+			<p className="highscore">Highscore: {highscore}</p>
+			<p className="clicks">Clicks: {count}</p>
 
 			<div className="dice-container">{diceElements}</div>
 

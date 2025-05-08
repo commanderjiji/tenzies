@@ -14,10 +14,6 @@ import dice5Green from "./images/5diceGreen.png";
 import dice6Green from "./images/6diceGreen.png";
 
 export default function Die({ value, isHeld, holdDice, id }) {
-	const styles = {
-		backgroundColor: isHeld ? "#59E391" : "white",
-	};
-
 	const diceImages = {
 		1: dice1,
 		2: dice2,
@@ -36,12 +32,7 @@ export default function Die({ value, isHeld, holdDice, id }) {
 		6: dice6Green,
 	};
 
-	return (
-		<>
-			<img onClick={() => holdDice(id)} className="dice" src={isHeld ? diceImagesGreen[value] : diceImages[value]} alt="Dice" />
-			{/* <button onClick={() => holdDice(id)} aria-pressed={isHeld} aria-label={`Die with value ${value}, ${isHeld ? "held" : "not held"} `} style={styles}>
-				{value}
-			</button> */}
-		</>
-	);
+	const currentDiceImage = isHeld ? diceImagesGreen[value] : diceImages[value];
+
+	return <img onClick={() => holdDice(id)} className="dice" src={currentDiceImage} alt={`Die with value ${value}${isHeld ? " (held)" : ""}`} aria-pressed={isHeld} aria-label={`Die with value ${value}, ${isHeld ? "held" : "not held"}`} />;
 }
