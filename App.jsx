@@ -57,8 +57,6 @@ export default function App() {
 
 	function holdDice(id) {
 		setDiceNumber((prevDice) => prevDice.map((die) => (die.id === id ? { ...die, isHeld: !die.isHeld } : die)));
-
-		setCount((prevCount) => prevCount + 1);
 	}
 
 	const diceElements = diceNumber.map((dieObj) => <Die holdDice={holdDice} id={dieObj.id} key={dieObj.id} value={dieObj.value} isHeld={dieObj.isHeld} />);
@@ -73,7 +71,7 @@ export default function App() {
 			<p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
 
 			<p className="highscore">Highscore: {highscore}</p>
-			<p className="clicks">Clicks: {count}</p>
+			<p className="clicks">Rolls: {count}</p>
 
 			<div className="dice-container">{diceElements}</div>
 
